@@ -1,0 +1,24 @@
+{
+  "name": "lokit-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbdiazizM3/lokit-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AbdiazizM3/lokit-backend/issues"
+  },
+  "homepage": "https://github.com/AbdiazizM3/lokit-backend#readme",
+  "description": "",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "jest": "^29.7.0"
+  }
+}
