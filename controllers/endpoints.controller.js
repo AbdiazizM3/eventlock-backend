@@ -1,13 +1,11 @@
 const fetchEndpoints = require("../models/endpoints.model");
 
 function getEndpoints(req, res, next) {
-  fetchEndPoints()
-    .then((endpoint) => {
-      res.status(200).send(endpoint);
+  fetchEndpoints()
+    .then((endpoints) => {
+      res.status(200).send({ endpoints });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 }
 
 module.exports = getEndpoints;

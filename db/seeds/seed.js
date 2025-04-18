@@ -38,7 +38,7 @@ const seed = ({ userData, eventsData, eventMembersData, tasksData }) => {
         event_member_id SERIAL PRIMARY KEY,
         event_id INT REFERENCES events(event_id) ON DELETE CASCADE,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        UNIQUE (trip_id, user_id)
+        UNIQUE (event_id, user_id)
         );
         `);
     })

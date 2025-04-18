@@ -1,6 +1,6 @@
 module.exports = [
   {
-    task_name: "Greetings and Coffee",
+    task_title: "Greetings and Coffee",
     task_location: "Holland Park Kensington High Street Entrance",
     task_start_time: "11:00:00",
     task_end_time: "11:30:00",
@@ -10,7 +10,7 @@ module.exports = [
     event_id: 1,
   },
   {
-    task_name: "Kyoto Garden Walk",
+    task_title: "Kyoto Garden Walk",
     task_location: "Kyoto Garden",
     task_start_time: "11:30:00",
     task_end_time: "12:00:00",
@@ -21,7 +21,7 @@ module.exports = [
     event_id: 1,
   },
   {
-    task_name: "Picnic On The Main Lawn",
+    task_title: "Picnic On The Main Lawn",
     task_location: "Kyoto Garden",
     task_start_time: "12:00:00",
     task_end_time: "13:30:00",
@@ -32,7 +32,7 @@ module.exports = [
     event_id: 1,
   },
   {
-    task_name: "OPTIONAL: Walk or Explore",
+    task_title: "OPTIONAL: Walk or Explore",
     task_location: "Holland Park Kensington High Street Entrance",
     task_start_time: "13:30:00",
     task_end_time: "14:30:00",
@@ -43,7 +43,7 @@ module.exports = [
     event_id: 1,
   },
   {
-    task_name: "Ice Cream or Cafe Stop",
+    task_title: "Ice Cream or Cafe Stop",
     task_location:
       "Ice Cream (Park Cafe / Kiosk (near the playground) Cafe (Cafe Phillies)",
     task_start_time: "14:30:00",
@@ -55,7 +55,7 @@ module.exports = [
     event_id: 1,
   },
   {
-    task_name: "Lighting Talks / Peer Panels",
+    task_title: "Lighting Talks / Peer Panels",
     task_location: "Southeast corner near Parkside Pool",
     task_start_time: "11:15:00",
     task_end_time: "11:40:00",
