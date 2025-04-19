@@ -5,12 +5,13 @@ const getEndpoints = require("./controllers/endpoints.controller");
 const usersRouter = require("./routers/users.router");
 const eventsRouter = require("./routers/events.router");
 
+app.use(express.json());
+
 app.get("/api", getEndpoints);
 app.use("/api/events", eventsRouter);
 app.use("/api/users", usersRouter);
 
 app.use((err, req, res, next) => {
-  console.log(err);
   if (err.code) {
     res.status(400).send({ msg: "Bad request" });
   } else {
@@ -27,7 +28,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
   res.status(500).send({ msg: "server error" });
 });
 

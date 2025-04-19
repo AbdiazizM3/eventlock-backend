@@ -87,3 +87,177 @@ describe("GET /api/events/:event_id", () => {
       });
   });
 });
+
+describe("POST /api/events", () => {
+  test("201: Responds with an object containing the new event", () => {
+    const newEvent = {
+      event_title: "Birthday Party",
+      event_date: "2022-02-02",
+      event_location: "Farringdon, London",
+      event_description: "Partying at Bounce",
+      event_img_url:
+        "https://cdn.pixabay.com/photo/2015/01/22/00/07/happy-607282_1280.jpg",
+      event_created_by: 3,
+    };
+
+    return request(app)
+      .post("/api/events")
+      .send(newEvent)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.newEvent).toEqual({
+          event_id: 7,
+          event_title: "Birthday Party",
+          event_date: "2022-02-02T00:00:00.000Z",
+          event_location: "Farringdon, London",
+          event_description: "Partying at Bounce",
+          event_img_url:
+            "https://cdn.pixabay.com/photo/2015/01/22/00/07/happy-607282_1280.jpg",
+          event_created_by: 3,
+        });
+      });
+  });
+  test("400: Responds with an error when required fields are missing", () => {
+    const newEvent = {
+      event_date: "2022-02-02",
+      event_location: "Farringdon, London",
+      event_description: "Partying at Bounce",
+      event_img_url:
+        "https://cdn.pixabay.com/photo/2015/01/22/00/07/happy-607282_1280.jpg",
+      event_created_by: 3,
+    };
+
+    return request(app)
+      .post("/api/events")
+      .send(newEvent)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "event_title, event_date, event_location, and event_created_by are manditory fields and must be filled with valid data"
+        );
+      });
+  });
+  test("400: Responds with an error when references a user that does not exist", () => {
+    const newEvent = {
+      event_title: "Birthday Party",
+      event_date: "2022-02-02",
+      event_location: "Farringdon, London",
+      event_description: "Partying at Bounce",
+      event_img_url:
+        "https://cdn.pixabay.com/photo/2015/01/22/00/07/happy-607282_1280.jpg",
+      event_created_by: 99999,
+    };
+
+    return request(app)
+      .post("/api/events")
+      .send(newEvent)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User does not exist");
+      });
+  });
+});
+
+describe("PATCH /api/events/:event_id", () => {
+  test("200: Responds with the updated event object", () => {
+    const changes = {
+      event_title: "Bikini Bottom Auctions",
+      event_date: "2025-05-14T23:00:00.000Z",
+      event_location: "Art Museum, Bikini Bottom",
+      event_description:
+        "All the most famous sea creatures are visiting to bid on some luxury items found in this auction",
+    };
+
+    return request(app)
+      .patch("/api/events/2")
+      .send(changes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.updatedEvent.event_id).toBe(2);
+        expect(body.updatedEvent.event_title).toBe("Bikini Bottom Auctions");
+        expect(body.updatedEvent.event_date).toBe("2025-05-13T23:00:00.000Z");
+        expect(body.updatedEvent.event_location).toBe(
+          "Art Museum, Bikini Bottom"
+        );
+        expect(body.updatedEvent.event_description).toBe(
+          "All the most famous sea creatures are visiting to bid on some luxury items found in this auction"
+        );
+        expect(body.updatedEvent.event_img_url).toBe(
+          "https://t3.ftcdn.net/jpg/03/72/75/95/360_F_372759520_JMN3DwwOUqxXfsCoUJ8rXQ19qXhONws7.jpg"
+        );
+        expect(body.updatedEvent.event_created_by).toBe(3);
+      });
+  });
+  test("404: Responds with an error when searching for an event_id that does not exist", () => {
+    const changes = {
+      event_title: "Bikini Bottom Auctions",
+      event_date: "2025-05-14T23:00:00.000Z",
+      event_location: "Art Museum, Bikini Bottom",
+      event_description:
+        "All the most famous sea creatures are visiting to bid on some luxury items found in this auction",
+    };
+
+    return request(app)
+      .patch("/api/events/99999")
+      .send(changes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching for an event_id that is not a valid", () => {
+    const changes = {
+      event_title: "Bikini Bottom Auctions",
+      event_date: "2025-05-14T23:00:00.000Z",
+      event_location: "Art Museum, Bikini Bottom",
+      event_description:
+        "All the most famous sea creatures are visiting to bid on some luxury items found in this auction",
+    };
+
+    return request(app)
+      .patch("/api/events/not_valid")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: responds with an error when provided with a valid body with invalid values", () => {
+    const changes = {
+      event_title: 3,
+      event_date: 123,
+      event_location: 43435,
+      event_description: 42455,
+    };
+
+    return request(app)
+      .patch("/api/events/2")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("DELETE /api/event/:event_id", () => {
+  test("204: Removes an event object and responds with no content", () => {
+    return request(app).delete("/api/events/2").expect(204);
+  });
+  test("404: Responds with an error when searching for an event_id that does not exist", () => {
+    return request(app)
+      .delete("/api/events/99999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching for an event_id that is not a valid", () => {
+    return request(app)
+      .delete("/api/events/not_valid")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
