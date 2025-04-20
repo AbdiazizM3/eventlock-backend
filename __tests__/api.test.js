@@ -261,3 +261,22 @@ describe("DELETE /api/event/:event_id", () => {
       });
   });
 });
+
+describe("GET /api/users", () => {
+  test("200: Responds with all user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.users)).toBe(true);
+        body.users.forEach((user) => {
+          expect(user).toHaveProperty("user_id");
+          expect(user).toHaveProperty("user_name");
+          expect(user).toHaveProperty("user_email");
+          expect(user).toHaveProperty("user_avatar_img_url");
+          expect(user).toHaveProperty("user_is_staff");
+          expect(user).toHaveProperty("user_created_at");
+        });
+      });
+  });
+});
