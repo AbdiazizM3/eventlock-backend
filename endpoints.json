@@ -1,5 +1,116 @@
 {
     "GET /api": {
-        "description": "Serves an a JSON representation of all the available endpoints of the api."
+        "description": "Serves a JSON representation of all the available endpoints of the api."
+    },
+    "GET /api/events": {
+        "description": "Serves an array containing all event objects",
+        "queries": [],
+        "exampleResponse": {
+            "events": [
+                {
+                    "event_id": 1,
+                    "event_title": "Sunset Social",
+                    "event_date": "2025-05-10",
+                    "event_location": "Primrose Hill",
+                    "event_description": "Evening meetup with scenic views and good vibes",
+                    "event_created_by": 2,
+                    "event_img_url": "https://t4.ftcdn.net/jpg/02/84/08/36/360_F_284083678_5fydv4N6myZcVE0YeD0Db7L9Co3u5cCP.jpg"
+                  }
+            ]
+        }
+    },
+    "GET /api/events/:event_id": {
+        "description": "Serves an event object based on the event_id",
+        "queries": [],
+        "exampleResponse": {
+            "event": {
+                "event_id": 1,
+                "event_title": "Sunset Social",
+                "event_date": "2025-05-10",
+                "event_location": "Primrose Hill",
+                "event_description": "Evening meetup with scenic views and good vibes",
+                "event_created_by": 2,
+                "event_img_url": "https://t4.ftcdn.net/jpg/02/84/08/36/360_F_284083678_5fydv4N6myZcVE0YeD0Db7L9Co3u5cCP.jpg"
+            }
+        }
+    },
+    "POST /api/events": {
+        "description": "Serves a new event object",
+        "queries": [],
+        "exampleResponse": {
+            "newEvent": {
+                "event_id": 7,
+                "event_title": "Birthday Party",
+                "event_date": "2022-02-02T00:00:00.000Z",
+                "event_location": "Farringdon, London",
+                "event_description": "Partying at Bounce",
+                "event_img_url": "https://cdn.pixabay.com/photo/2015/01/22/00/07/happy-607282_1280.jpg",
+                "event_created_by": 3
+            }
+        },
+        "exampleRequest": {
+            "event_title": "Birthday Party",
+            "event_date": "2022-02-02",
+            "event_location": "Farringdon, London",
+            "event_description": "Partying at Bounce",
+            "event_img_url": "https://cdn.pixabay.com/photo/2015/01/22/00/07/happy-607282_1280.jpg",
+            "event_created_by": 3
+        }
+    },
+    "PATCH /api/events/:event_id": {
+        "description": "Serves an updated event object",
+        "queries": [],
+        "exampleResponse": {
+            "updatedEvent": {
+                "event_id": 2,
+                "event_title": "Cat Party",
+                "event_date": "2025-05-13T23:00:00.000Z",
+                "event_location": "The Little Cat Cafe, Cormont Rd, London",
+                "event_description": "Meeting adorable cats at a cat cafe!",
+                "event_img_url": "https://t3.ftcdn.net/jpg/03/72/75/95/360_F_372759520_JMN3DwwOUqxXfsCoUJ8rXQ19qXhONws7.jpg",
+                "event_created_by": 3
+            }
+        },
+        "exampleRequest": {
+            "event_title": "Cat Party",
+            "event_date": "2025-05-14T23:00:00.000Z",
+            "event_location": "The Little Cat Cafe, Cormont Rd, London",
+            "event_description": "Meeting adorable cats at a cat cafe!"
+        }
+    },
+    "DELETE /api/events/:event_id": {
+        "description": "Serves no content and deletes an event from events",
+        "queries": [],
+        "exampleResponse": {}
+    },
+    "GET /api/users": {
+        "description": "Serves an array containing all user objects",
+        "queries": [],
+        "exampleResponse": {
+            "users": [
+                {
+                    "user_id": 1,
+                    "user_name": "Jessica Tran",
+                    "user_email": "jessica.tran@example.com",
+                    "user_avatar_img_url": "https://cdn-icons-png.freepik.com/512/6596/6596121.png",
+                    "user_created_at": "2024-05-01T09:30:00.000Z",
+                    "user_is_staff": false
+              }
+            ]
+        }
+    },
+    "GET /api/users/:user_id": {
+        "description": "Serves a user object based on the user_id",
+        "queries": [],
+        "exampleResponse": {
+            "user": {
+                "user_id": 1,
+                "user_name": "Jessica Tran",
+                "user_email": "jessica.tran@example.com",
+                "user_avatar_img_url": "https://cdn-icons-png.freepik.com/512/6596/6596121.png",
+                "user_created_at": "2024-05-01T09:30:00.000Z",
+                "user_is_staff": false
+            }
+        }
     }
 }
