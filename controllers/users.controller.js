@@ -3,6 +3,7 @@ const {
   fetchUserById,
   createUser,
   updateUserById,
+  removeUser,
 } = require("../models/users.model");
 
 function getAllUsers(req, res, next) {
@@ -42,4 +43,19 @@ function patchUserById(req, res, next) {
     .catch(next);
 }
 
-module.exports = { getAllUsers, getUserById, postUser, patchUserById };
+function deleteUser(req, res, next) {
+  const { user_id } = req.params;
+  removeUser(user_id)
+    .then(() => {
+      res.status(204).send({});
+    })
+    .catch(next);
+}
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  postUser,
+  patchUserById,
+  deleteUser,
+};

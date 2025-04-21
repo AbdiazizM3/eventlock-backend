@@ -418,3 +418,25 @@ describe("PATCH /api/users/:user_id", () => {
       });
   });
 });
+
+describe("DELETE /api/users/:user_id", () => {
+  test("204: Removes a user object based on its id and responds with no content", () => {
+    return request(app).delete("/api/users/4").expect(204);
+  });
+  test("404: Responds with an error when searching for a valid user that does not exist", () => {
+    return request(app)
+      .delete("/api/users/9999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+  test("400: Responds with an error when searching for an invalid user", () => {
+    return request(app)
+      .delete("/api/users/not_valid")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
