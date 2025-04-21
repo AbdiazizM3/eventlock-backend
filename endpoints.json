@@ -130,5 +130,23 @@
             "user_name": "Robert Williams",
             "user_email": "newEmail@example.com"
           }
+    },
+    "PATCH /api/users/:user_id": {
+        "description": "Serves an updated user object",
+        "queries": [],
+        "exampleResponse": {
+            "updatedUser": {
+              "user_id": 1,
+              "user_name": "Mr. Mittens",
+              "user_email": "jessica.tran@example.com",
+              "user_avatar_img_url": "https://c02.purpledshub.com/uploads/sites/47/2024/02/How-long-do-cats-live.jpg?w=1200",
+              "user_is_staff": false,
+              "user_created_at": "2024-05-01T08:30:00.000Z"
+            }
+          },
+        "exampleRequest": {
+            "user_name": "Mr. Mittens",
+            "user_avatar_img_url": "https://c02.purpledshub.com/uploads/sites/47/2024/02/How-long-do-cats-live.jpg?w=1200"
+        }
     }
 }

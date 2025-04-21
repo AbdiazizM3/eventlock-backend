@@ -55,4 +55,32 @@ function createUser(user_name, user_email) {
   });
 }
 
-module.exports = { fetchAllUsers, fetchUserById, createUser };
+function updateUserById(user_id, user_name, user_avatar_img_url) {
+  if (
+    (user_name && typeof user_name !== "string") ||
+    (user_avatar_img_url && typeof user_avatar_img_url !== "string")
+  ) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  return db
+    .query(
+      `
+    UPDATE users
+    SET
+    user_name = COALESCE($1, user_name),
+    user_avatar_img_url = COALESCE($2, user_avatar_img_url)
+    WHERE user_id = $3
+    RETURNING *;
+    `,
+      [user_name, user_avatar_img_url, user_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return result.rows[0];
+    });
+}
+
+module.exports = { fetchAllUsers, fetchUserById, createUser, updateUserById };

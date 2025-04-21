@@ -2,6 +2,7 @@ const {
   fetchAllUsers,
   fetchUserById,
   createUser,
+  updateUserById,
 } = require("../models/users.model");
 
 function getAllUsers(req, res, next) {
@@ -22,6 +23,7 @@ function getUserById(req, res, next) {
 
 function postUser(req, res, next) {
   const { user_name, user_email } = req.body;
+
   createUser(user_name, user_email)
     .then((newUser) => {
       res.status(201).send({ newUser });
@@ -29,4 +31,15 @@ function postUser(req, res, next) {
     .catch(next);
 }
 
-module.exports = { getAllUsers, getUserById, postUser };
+function patchUserById(req, res, next) {
+  const { user_id } = req.params;
+  const { user_name, user_avatar_img_url } = req.body;
+
+  updateUserById(user_id, user_name, user_avatar_img_url)
+    .then((updatedUser) => {
+      res.status(200).send({ updatedUser });
+    })
+    .catch(next);
+}
+
+module.exports = { getAllUsers, getUserById, postUser, patchUserById };

@@ -128,6 +128,15 @@ function updateEvent(
   event_description,
   event_img_url
 ) {
+  if (
+    (event_title && typeof event_title !== "string") ||
+    (event_date && typeof event_date !== "string") ||
+    (event_location && typeof event_location !== "string") ||
+    (event_description && typeof event_description !== "string") ||
+    (event_img_url && typeof event_img_url !== "string")
+  ) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
   return db
     .query(
       `

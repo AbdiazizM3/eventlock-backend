@@ -349,3 +349,72 @@ describe("POST /api/users", () => {
       });
   });
 });
+
+describe("PATCH /api/users/:user_id", () => {
+  test("200: Responds with the updated user object", () => {
+    const changes = {
+      user_name: "Mr. Mittens",
+      user_avatar_img_url:
+        "https://c02.purpledshub.com/uploads/sites/47/2024/02/How-long-do-cats-live.jpg?w=1200",
+    };
+
+    return request(app)
+      .patch("/api/users/1")
+      .send(changes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.updatedUser.user_id).toBe(1);
+        expect(body.updatedUser.user_name).toBe("Mr. Mittens");
+        expect(body.updatedUser.user_email).toBe("jessica.tran@example.com");
+        expect(body.updatedUser.user_avatar_img_url).toBe(
+          "https://c02.purpledshub.com/uploads/sites/47/2024/02/How-long-do-cats-live.jpg?w=1200"
+        );
+        expect(body.updatedUser.user_is_staff).toBe(false);
+        expect(typeof body.updatedUser.user_created_at).toBe("string");
+      });
+  });
+  test("404: Responds with an error when searching for a valid user that does not exist", () => {
+    const changes = {
+      user_name: "Mr. Mittens",
+      user_avatar_img_url:
+        "https://c02.purpledshub.com/uploads/sites/47/2024/02/How-long-do-cats-live.jpg?w=1200",
+    };
+
+    return request(app)
+      .patch("/api/users/9999999")
+      .send(changes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+  test("400: Responds with an error when searching for an invalid user", () => {
+    const changes = {
+      user_name: "Mr. Mittens",
+      user_avatar_img_url:
+        "https://c02.purpledshub.com/uploads/sites/47/2024/02/How-long-do-cats-live.jpg?w=1200",
+    };
+
+    return request(app)
+      .patch("/api/users/not_valid")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error when inputing valid fields with invalid data", () => {
+    const changes = {
+      user_name: 435,
+      user_avatar_img_url: 53,
+    };
+
+    return request(app)
+      .patch("/api/users/1")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
