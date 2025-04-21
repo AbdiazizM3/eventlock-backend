@@ -280,3 +280,37 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("GET /api/users/:user_id", () => {
+  test("200: Responds with a single user object based on the user_id", () => {
+    return request(app)
+      .get("/api/users/2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user.user_id).toBe(2);
+        expect(body.user.user_name).toBe("Marcus Reed");
+        expect(body.user.user_email).toBe("marcus.reed@example.com");
+        expect(body.user.user_avatar_img_url).toBe(
+          "https://cdn-icons-png.freepik.com/512/6596/6596121.png"
+        );
+        expect(body.user.user_is_staff).toBe(false);
+        expect(typeof body.user.user_created_at).toBe("string");
+      });
+  });
+  test("404: Responds with an error when searching with a user_id that is valid but does not exist", () => {
+    return request(app)
+      .get("/api/users/99999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+  test("400: Responds with an error when searching with a user_id that is not valid", () => {
+    return request(app)
+      .get("/api/users/not_valid")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
