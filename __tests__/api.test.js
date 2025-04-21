@@ -240,7 +240,7 @@ describe("PATCH /api/events/:event_id", () => {
   });
 });
 
-describe("DELETE /api/event/:event_id", () => {
+describe("DELETE /api/events/:event_id", () => {
   test("204: Removes an event object and responds with no content", () => {
     return request(app).delete("/api/events/2").expect(204);
   });
@@ -311,6 +311,41 @@ describe("GET /api/users/:user_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("POST /api/users", () => {
+  test("201: Responds with an object containing the new user", () => {
+    const newUser = {
+      user_name: "Robert Williams",
+      user_email: "newEmail@example.com",
+    };
+
+    return request(app)
+      .post("/api/users")
+      .send(newUser)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.newUser.user_id).toBe(8);
+        expect(body.newUser.user_name).toBe("Robert Williams");
+        expect(body.newUser.user_email).toBe("newEmail@example.com");
+        expect(body.newUser.user_avatar_img_url).toBe(
+          "https://cdn-icons-png.freepik.com/512/6596/6596121.png"
+        );
+        expect(body.newUser.user_is_staff).toBe(false);
+        expect(typeof body.newUser.user_created_at).toBe("string");
+      });
+  });
+  test("400: Responds with an error when required fields are missing", () => {
+    return request(app)
+      .post("/api/users")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "user_name and user_email are manditory fields and must be filled with valid data"
+        );
       });
   });
 });

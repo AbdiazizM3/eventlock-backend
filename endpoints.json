@@ -112,5 +112,23 @@
                 "user_is_staff": false
             }
         }
+    },
+    "POST /api/users/:user_id": {
+        "description": "Serves a new user object",
+        "queries": [],
+        "exampleResponse": {
+            "newUser": {
+                "user_id": 8,
+                "user_name": "Robert Williams",
+                "user_email": "newEmail@example.com",
+                "user_avatar_img_url": "https://cdn-icons-png.freepik.com/512/6596/6596121.png",
+                "user_is_staff": false,
+                "user_created_at": "2025-04-21T18:37:34.055Z"
+              }
+        },
+        "exampleRequest": {
+            "user_name": "Robert Williams",
+            "user_email": "newEmail@example.com"
+          }
     }
 }

@@ -1,3 +1,4 @@
+const format = require("pg-format");
 const db = require("../db/connection");
 
 function fetchAllUsers() {
@@ -28,4 +29,30 @@ function fetchUserById(user_id) {
     });
 }
 
-module.exports = { fetchAllUsers, fetchUserById };
+function createUser(user_name, user_email) {
+  if (!user_name || !user_email) {
+    return Promise.reject({
+      status: 400,
+      msg: "user_name and user_email are manditory fields and must be filled with valid data",
+    });
+  }
+  user_avatar_img_url =
+    "https://cdn-icons-png.freepik.com/512/6596/6596121.png";
+
+  const insertQueryStr = format(
+    `
+    INSERT INTO users
+    (user_name, user_email, user_avatar_img_url)
+    VALUES
+    (%L)
+    RETURNING *;
+    `,
+    [user_name, user_email, user_avatar_img_url]
+  );
+
+  return db.query(insertQueryStr).then((result) => {
+    return result.rows[0];
+  });
+}
+
+module.exports = { fetchAllUsers, fetchUserById, createUser };
