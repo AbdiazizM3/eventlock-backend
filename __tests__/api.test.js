@@ -440,3 +440,37 @@ describe("DELETE /api/users/:user_id", () => {
       });
   });
 });
+
+describe("GET /api/users/:user_id/events", () => {
+  test("200: Responds with all events based on the user_id", () => {
+    return request(app)
+      .get("/api/users/1/events")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.events)).toBe(true);
+        body.events.forEach((event) => {
+          expect(event).toHaveProperty("event_member_id");
+          expect(event).toHaveProperty("event_id");
+          expect(event).toHaveProperty("event_title");
+          expect(event).toHaveProperty("user_id");
+          expect(event).toHaveProperty("event_created_by");
+        });
+      });
+  });
+  test("404: Responds with an error when searching for a valid user that does not exist", () => {
+    return request(app)
+      .get("/api/users/9999999/events")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+  test("400: Responds with an error when searching for an invalid user", () => {
+    return request(app)
+      .get("/api/users/not_valid/events")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});

@@ -100,10 +100,39 @@ function removeUser(user_id) {
     });
 }
 
+function fetchEventsByUserId(user_id) {
+  return db
+    .query(
+      `
+      SELECT 
+      event_members.event_member_id,
+      event_members.event_id,
+      events.event_title,
+      event_members.user_id,
+      events.event_created_by
+      FROM 
+      event_members
+      JOIN 
+      events
+      ON 
+      event_members.event_id = events.event_id
+      WHERE user_id = $1
+      `,
+      [user_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return result.rows;
+    });
+}
+
 module.exports = {
   fetchAllUsers,
   fetchUserById,
   createUser,
   updateUserById,
   removeUser,
+  fetchEventsByUserId,
 };

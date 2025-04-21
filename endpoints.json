@@ -149,9 +149,24 @@
             "user_avatar_img_url": "https://c02.purpledshub.com/uploads/sites/47/2024/02/How-long-do-cats-live.jpg?w=1200"
         }
     },
-    "DELETE /api/user/:user_id": {
+    "DELETE /api/users/:user_id": {
         "description": "Serves no content and deletes a user from users",
         "queries": [],
         "exampleResponse": {}
+    },
+    "GET /api/users/:user_id/events": {
+        "description": "Serves an array containing all event objects based on the the user_id being a member in an event",
+        "queries": [],
+        "exampleResponse": {
+            "events": [
+                {
+                  "event_member_id": 1,
+                  "event_id": 1,
+                  "event_title": "Sunset Social",
+                  "user_id": 1,
+                  "event_created_by": 2
+                }
+            ]
+        }
     }
 }

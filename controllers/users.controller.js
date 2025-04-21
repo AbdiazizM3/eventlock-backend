@@ -4,6 +4,7 @@ const {
   createUser,
   updateUserById,
   removeUser,
+  fetchEventsByUserId,
 } = require("../models/users.model");
 
 function getAllUsers(req, res, next) {
@@ -52,10 +53,20 @@ function deleteUser(req, res, next) {
     .catch(next);
 }
 
+function getEventsByUserId(req, res, next) {
+  const { user_id } = req.params;
+  fetchEventsByUserId(user_id)
+    .then((events) => {
+      res.status(200).send({ events });
+    })
+    .catch(next);
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
   postUser,
   patchUserById,
   deleteUser,
+  getEventsByUserId,
 };
