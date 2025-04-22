@@ -474,3 +474,96 @@ describe("GET /api/users/:user_id/events", () => {
       });
   });
 });
+
+describe("GET /api/events/:event_id/tasks", () => {
+  test("200: Responds with an array containing all task objects", () => {
+    return request(app)
+      .get("/api/events/1/tasks")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.tasks)).toBe(true);
+        body.tasks.forEach((task) => {
+          expect(task).toHaveProperty("task_id");
+          expect(task).toHaveProperty("task_title");
+          expect(task).toHaveProperty("task_location");
+          expect(task).toHaveProperty("task_description");
+          expect(task).toHaveProperty("task_start_time");
+          expect(task).toHaveProperty("task_end_time");
+          expect(task).toHaveProperty("task_img_url");
+          expect(task).toHaveProperty("event_id");
+        });
+      });
+  });
+  test("404: Responds with an error when searching with a valid event_id that does not exist", () => {
+    return request(app)
+      .get("/api/events/999999/tasks")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching with an invalid event_id", () => {
+    return request(app)
+      .get("/api/events/not_valid/tasks")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/events/:event_id/tasks/:task_id", () => {
+  test("200: Responds with a task object based on the task_id", () => {
+    return request(app)
+      .get("/api/events/1/tasks/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.task.task_id).toBe(1);
+        expect(body.task.task_title).toBe("Welcome & Scenic Chill");
+        expect(body.task.task_location).toBe(
+          "Primrose Hill Entrance (Regent's Park Road)"
+        );
+        expect(body.task.task_description).toBe(
+          "Meet at the bottom of the hill and grab a drink or snack while settling in."
+        );
+        expect(body.task.task_start_time).toBe("17:00:00");
+        expect(body.task.task_end_time).toBe("17:30:00");
+        expect(body.task.task_img_url).toBe(
+          "https://images.unsplash.com/photo-1587248721893-8e450a3b1f79"
+        );
+        expect(body.task.event_id).toBe(1);
+      });
+  });
+  test("404: Responds with an error when searching with a valid event_id that does not exist", () => {
+    return request(app)
+      .get("/api/events/999999/tasks/1")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching with an invalid event_id", () => {
+    return request(app)
+      .get("/api/events/not_valid/tasks/1")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Responds with an error when searching with a valid task_id that does not exist", () => {
+    return request(app)
+      .get("/api/events/1/tasks/9999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Task not found");
+      });
+  });
+  test("400: Responds with an error when searching with an invalid task_id", () => {
+    return request(app)
+      .get("/api/events/1/tasks/not_valid")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});

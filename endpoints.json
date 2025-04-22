@@ -168,5 +168,39 @@
                 }
             ]
         }
+    },
+    "GET /api/events/:event_id/tasks": {
+        "description": "Serves an array containing all task objects",
+        "queries": [],
+        "exampleResponse": {
+            "tasks": [
+                {
+                    "task_id": 1,
+                    "task_title": "Welcome & Scenic Chill",
+                    "task_location": "Primrose Hill Entrance (Regent's Park Road)",
+                    "task_start_time": "17:00:00",
+                    "task_end_time": "17:30:00",
+                    "task_description": "Meet at the bottom of the hill and grab a drink or snack while settling in.",
+                    "task_img_url": "https://images.unsplash.com/photo-1587248721893-8e450a3b1f79",
+                    "event_id": 1
+                  }
+            ]
+        }
+    },
+    "GET /api/events/:event_id/tasks/:task_id": {
+        "description": "Serves a task object based on the task_id",
+        "queries": [],
+        "exampleResponse": {
+            "task": {
+                "task_id": 1,
+                "task_title": "Welcome & Scenic Chill",
+                "task_location": "Primrose Hill Entrance (Regent's Park Road)",
+                "task_start_time": "17:00:00",
+                "task_end_time": "17:30:00",
+                "task_description": "Meet at the bottom of the hill and grab a drink or snack while settling in.",
+                "task_img_url": "https://images.unsplash.com/photo-1587248721893-8e450a3b1f79",
+                "event_id": 1
+            }
+        }
     }
 }

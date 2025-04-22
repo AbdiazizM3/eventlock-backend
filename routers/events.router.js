@@ -9,7 +9,7 @@ const {
 } = require("../controllers/events.controller");
 
 const eventsRouter = express.Router();
-eventsRouter.use("/:trip_id/tasks", tasksRouter);
+eventsRouter.use("/:event_id/tasks", tasksRouter);
 
 eventsRouter.get("/", getAllEvents);
 eventsRouter.post("/", addEvent);
