@@ -183,10 +183,66 @@ function removeEvent(event_id) {
     });
 }
 
+function fetchEventMembers(event_id) {
+  return db
+    .query(
+      `
+    SELECT * FROM event_members WHERE event_id = $1;
+    `,
+      [event_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Event not found" });
+      }
+      return result.rows;
+    });
+}
+
+function addEventMember(event_id, user_id) {
+  if (!user_id) {
+    return Promise.reject({
+      status: 400,
+      msg: "User_id is a manditory field and must be filled with valid data",
+    });
+  }
+
+  const insertQueryStr = format(
+    `
+    INSERT INTO event_members
+    (event_id, user_id)
+    VALUES
+    (%L)
+    RETURNING *;
+    `,
+    [event_id, user_id]
+  );
+
+  return db.query(insertQueryStr).then((result) => {
+    return result.rows[0];
+  });
+}
+
+async function checkIfEventExists(event_id) {
+  const isEventReal = await db.query(
+    `
+    SELECT * FROM events WHERE event_id = $1;
+    `,
+    [event_id]
+  );
+
+  if (isEventReal.rows.length === 0) {
+    return Promise.reject({ status: 404, msg: "Event not found" });
+  }
+}
+
 module.exports = {
   fetchAllEvents,
   fetchEvent,
   createEvent,
   updateEvent,
   removeEvent,
+  fetchEventMembers,
+  addEventMember,
+  checkIfEventExists,
 };

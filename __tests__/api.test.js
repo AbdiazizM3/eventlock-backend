@@ -778,3 +778,90 @@ describe("DELETE /api/events/:event_id/tasks/:task_id", () => {
       });
   });
 });
+
+describe("GET /api/events/:event_id/members", () => {
+  test("200: Responds with an array containing all event members", () => {
+    return request(app)
+      .get("/api/events/1/members")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.eventMembers)).toBe(true);
+        body.eventMembers.forEach((eventMember) => {
+          expect(eventMember).toHaveProperty("event_member_id");
+          expect(eventMember).toHaveProperty("event_id");
+          expect(eventMember).toHaveProperty("user_id");
+        });
+      });
+  });
+  test("404: Responds with an error when searching for an event_id that does not exist", () => {
+    return request(app)
+      .get("/api/events/99999/members")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching for an event_id that is not a valid", () => {
+    return request(app)
+      .get("/api/events/not_valid/members")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("POST /api/events/:event_id/members", () => {
+  test("201: Responds with the new event member", () => {
+    const newEventMember = {
+      user_id: 5,
+    };
+
+    return request(app)
+      .post("/api/events/1/members")
+      .send(newEventMember)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.newEventMember.event_member_id).toBe(17);
+        expect(body.newEventMember.event_id).toBe(1);
+        expect(body.newEventMember.user_id).toBe(5);
+      });
+  });
+  test("404: Responds with an error when searching for an event_id that does not exist", () => {
+    const newEventMember = {
+      user_id: 5,
+    };
+
+    return request(app)
+      .post("/api/events/999999/members")
+      .send(newEventMember)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching for an event_id that is not a valid", () => {
+    const newEventMember = {
+      user_id: 5,
+    };
+
+    return request(app)
+      .post("/api/events/not_valid/members")
+      .send(newEventMember)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error when required fields are missing", () => {
+    return request(app)
+      .post("/api/events/1/members")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "User_id is a manditory field and must be filled with valid data"
+        );
+      });
+  });
+});

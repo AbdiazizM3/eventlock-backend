@@ -204,7 +204,7 @@
         }
     },
     "POST /api/events/:event_id/tasks": {
-        "description": "Serves an array containing the new task object",
+        "description": "Serves a new task object",
         "queries": [],
         "exampleResponse": {
             "task": 
@@ -253,5 +253,17 @@
         "description": "Serves no content and deletes a task from tasks",
         "queries": [],
         "exampleResponse": {}
+    },
+    "POST /api/events/:event_id/tasks/:task_id": {
+        "description": "Serves a new event member object",
+        "queries": [],
+        "exampleResponse": {
+            "event_member_id": 17,
+            "event_id": 1,
+            "user_id": 5
+        },
+        "exampleRequest": {
+            "user_id": 5
+        }
     }
 }
