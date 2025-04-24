@@ -47,7 +47,7 @@ const seed = ({ userData, eventsData, eventMembersData, tasksData }) => {
         CREATE TABLE tasks (
         task_id SERIAL PRIMARY KEY,
         task_title VARCHAR NOT NULL,
-        task_location VARCHAR NOT NULL,
+        task_location VARCHAR,
         task_description TEXT,
         task_start_time TIME,
         task_end_time TIME,

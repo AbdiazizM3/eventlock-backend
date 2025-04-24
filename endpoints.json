@@ -202,5 +202,51 @@
                 "event_id": 1
             }
         }
+    },
+    "POST /api/events/:event_id/tasks": {
+        "description": "Serves an array containing the new task object",
+        "queries": [],
+        "exampleResponse": {
+            "task": 
+            {
+                "task_id": 18,
+                "task_title": "Coffee Break",
+                "task_location": null,
+                "task_start_time": "13:00:00",
+                "task_end_time": "13:15:00",
+                "task_description": "Take a 15 break to eat or relax",
+                "task_img_url": "https://cdn5.vectorstock.com/i/1000x1000/73/69/calendar-icon-graphic-design-template-vector-23487369.jpg",
+                "event_id": 2
+            }
+        },
+        "exampleRequest": {
+            "task_title": "Coffee break",
+            "task_start_time": "13:00",
+            "task_end_time": "13:15",
+            "task_description": "Take a 15 break to eat or relax"
+        }
+    },
+    "PATCH /api/events/:event_id/tasks/:task_id": {
+        "description": "Serves an updated task object",
+        "queries": [],
+        "exampleResponse": {
+            "updatedTask": {
+                "task_id": 1,
+                "task_title": "Scenic Chill",
+                "task_location": "Primrose Hill Entrance (Regent's Park Road)",
+                "task_description": "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)",
+                "task_start_time": "17:30:00",
+                "task_end_time": "17:55:00",
+                "task_img_url": "https://images.unsplash.com/photo-1587248721893-8e450a3b1f79",
+                "event_id": 1
+            }
+        },
+        "exampleRequest": {
+            "task_title": "Scenic Chill",
+            "task_start_time": "17:30:00",
+            "task_end_time": "17:55:00",
+            "task_description":
+        "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)"
+        }
     }
 }

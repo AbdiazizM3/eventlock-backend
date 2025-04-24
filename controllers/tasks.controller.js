@@ -2,6 +2,8 @@ const {
   fetchAllTasks,
   fetchTask,
   checkIfEventExists,
+  createTask,
+  updateTask,
 } = require("../models/tasks.model");
 
 function getAllTasks(req, res, next) {
@@ -30,4 +32,63 @@ function getTask(req, res, next) {
     .catch(next);
 }
 
-module.exports = { getAllTasks, getTask };
+function postTask(req, res, next) {
+  const { event_id } = req.params;
+  const {
+    task_title,
+    task_location,
+    task_start_time,
+    task_end_time,
+    task_description,
+    task_img_url,
+  } = req.body;
+
+  checkIfEventExists(event_id)
+    .then(() => {
+      createTask(
+        event_id,
+        task_title,
+        task_location,
+        task_start_time,
+        task_end_time,
+        task_description,
+        task_img_url
+      )
+        .then((newTask) => {
+          res.status(201).send({ newTask });
+        })
+        .catch(next);
+    })
+    .catch(next);
+}
+
+function patchTask(req, res, next) {
+  const { task_id, event_id } = req.params;
+  const {
+    task_title,
+    task_location,
+    task_start_time,
+    task_end_time,
+    task_description,
+    task_img_url,
+  } = req.body;
+  checkIfEventExists(event_id)
+    .then(() => {
+      updateTask(
+        task_title,
+        task_location,
+        task_start_time,
+        task_end_time,
+        task_description,
+        task_img_url,
+        task_id
+      )
+        .then((updatedTask) => {
+          res.status(200).send({ updatedTask });
+        })
+        .catch(next);
+    })
+    .catch(next);
+}
+
+module.exports = { getAllTasks, getTask, postTask, patchTask };

@@ -567,3 +567,176 @@ describe("GET /api/events/:event_id/tasks/:task_id", () => {
       });
   });
 });
+
+describe("POST /api/events/:event_id/tasks", () => {
+  test("201: Responds with the new task object", () => {
+    const newTask = {
+      task_title: "Coffee break",
+      task_start_time: "13:00",
+      task_end_time: "13:15",
+    };
+
+    return request(app)
+      .post("/api/events/2/tasks")
+      .send(newTask)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.newTask.task_id).toBe(18);
+        expect(body.newTask.task_title).toBe("Coffee break");
+        expect(body.newTask.task_location).toBe(null);
+        expect(body.newTask.task_description).toBe(null);
+        expect(body.newTask.task_start_time).toBe("13:00:00");
+        expect(body.newTask.task_end_time).toBe("13:15:00");
+        expect(body.newTask.task_img_url).toBe(
+          "https://cdn5.vectorstock.com/i/1000x1000/73/69/calendar-icon-graphic-design-template-vector-23487369.jpg"
+        );
+        expect(body.newTask.event_id).toBe(2);
+      });
+  });
+  test("404: Responds with an error when searching with a valid event_id that does not exist", () => {
+    const newTask = {
+      task_title: "Coffee break",
+      task_start_time: "13:00",
+      task_end_time: "13:15",
+    };
+
+    return request(app)
+      .post("/api/events/999999/tasks")
+      .send(newTask)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching with an invalid event_id", () => {
+    const newTask = {
+      task_title: "Coffee break",
+      task_start_time: "13:00",
+      task_end_time: "13:15",
+    };
+
+    return request(app)
+      .post("/api/events/not_valid/tasks")
+      .send(newTask)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error when required fields are missing", () => {
+    const newTask = {
+      task_title: "Coffee break",
+      task_end_time: "13:15",
+    };
+
+    return request(app)
+      .post("/api/events/2/tasks")
+      .send(newTask)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "task_title, task_start_time, and task_end_time are madnitory fields and must be filled with valid data"
+        );
+      });
+  });
+});
+
+describe("PATCH /api/events/:event_id/tasks/:task_id", () => {
+  test("200: Responds with the updated task object", () => {
+    const changes = {
+      task_title: "Scenic Chill",
+      task_start_time: "17:30:00",
+      task_end_time: "17:55:00",
+      task_description:
+        "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)",
+    };
+
+    return request(app)
+      .patch("/api/events/1/tasks/1")
+      .send(changes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.updatedTask.task_id).toBe(1);
+        expect(body.updatedTask.task_title).toBe("Scenic Chill");
+        expect(body.updatedTask.task_location).toBe(
+          "Primrose Hill Entrance (Regent's Park Road)"
+        );
+        expect(body.updatedTask.task_start_time).toBe("17:30:00");
+        expect(body.updatedTask.task_end_time).toBe("17:55:00");
+        expect(body.updatedTask.task_description).toBe(
+          "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)"
+        );
+        expect(body.updatedTask.task_img_url).toBe(
+          "https://images.unsplash.com/photo-1587248721893-8e450a3b1f79"
+        );
+        expect(body.updatedTask.task_id).toBe(1);
+      });
+  });
+  test("400: Responds with an error when searching with an invalid event_id", () => {
+    const changes = {
+      task_title: "Scenic Chill",
+      task_start_time: "17:30:00",
+      task_end_time: "17:55:00",
+      task_description:
+        "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)",
+    };
+
+    return request(app)
+      .patch("/api/events/not_valid/tasks/1")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Responds with an error when searching with a valid task_id that does not exist", () => {
+    const changes = {
+      task_title: "Scenic Chill",
+      task_start_time: "17:30:00",
+      task_end_time: "17:55:00",
+      task_description:
+        "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)",
+    };
+
+    return request(app)
+      .patch("/api/events/1/tasks/9999999")
+      .send(changes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Task not found");
+      });
+  });
+  test("400: Responds with an error when searching with an invalid task_id", () => {
+    const changes = {
+      task_title: "Scenic Chill",
+      task_start_time: "17:30:00",
+      task_end_time: "17:55:00",
+      task_description:
+        "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)",
+    };
+
+    return request(app)
+      .patch("/api/events/1/tasks/not_valid")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error when using invalid data types", () => {
+    const changes = {
+      task_title: 78,
+      task_start_time: 8,
+      task_end_time: 135,
+      task_description: 77,
+    };
+
+    return request(app)
+      .patch("/api/events/1/tasks/1")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
