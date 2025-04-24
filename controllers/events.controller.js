@@ -7,6 +7,7 @@ const {
   fetchEventMembers,
   addEventMember,
   checkIfEventExists,
+  removeEventMember,
 } = require("../models/events.model");
 
 function getAllEvents(req, res, next) {
@@ -106,6 +107,20 @@ function postEventMember(req, res, next) {
     .catch(next);
 }
 
+function deleteEventMember(req, res, next) {
+  const { event_id } = req.params;
+  const { user_id } = req.body;
+  checkIfEventExists(event_id)
+    .then(() => {
+      removeEventMember(event_id, user_id)
+        .then(() => {
+          res.status(204).send({});
+        })
+        .catch(next);
+    })
+    .catch(next);
+}
+
 module.exports = {
   getAllEvents,
   getEvent,
@@ -114,4 +129,5 @@ module.exports = {
   deleteEvent,
   getEventMembers,
   postEventMember,
+  deleteEventMember,
 };

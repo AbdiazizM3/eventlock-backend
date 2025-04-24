@@ -236,6 +236,24 @@ async function checkIfEventExists(event_id) {
   }
 }
 
+function removeEventMember(event_id, user_id) {
+  if (!user_id) {
+    return Promise.reject({
+      status: 400,
+      msg: "User_id is a manditory field and must be filled with valid data",
+    });
+  }
+
+  return db.query(
+    `
+    DELETE FROM event_members
+    WHERE event_id = $1 AND user_id = $2
+    RETURNING *;
+    `,
+    [event_id, user_id]
+  );
+}
+
 module.exports = {
   fetchAllEvents,
   fetchEvent,
@@ -245,4 +263,5 @@ module.exports = {
   fetchEventMembers,
   addEventMember,
   checkIfEventExists,
+  removeEventMember,
 };

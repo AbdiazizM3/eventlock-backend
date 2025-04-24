@@ -865,3 +865,53 @@ describe("POST /api/events/:event_id/members", () => {
       });
   });
 });
+
+describe("DELETE /api/events/:event_id/members", () => {
+  test("204: Removes a user from an event based on the event_id and the user_id responds with no content", () => {
+    const memeberToRemove = {
+      user_id: 2,
+    };
+
+    return request(app)
+      .delete("/api/events/1/members")
+      .send(memeberToRemove)
+      .expect(204);
+  });
+  test("404: Responds with an error when searching for an event_id that does not exist", () => {
+    const memeberToRemove = {
+      user_id: 5,
+    };
+
+    return request(app)
+      .delete("/api/events/999999/members")
+      .send(memeberToRemove)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching for an event_id that is not a valid", () => {
+    const memeberToRemove = {
+      user_id: 5,
+    };
+
+    return request(app)
+      .delete("/api/events/not_valid/members")
+      .send(memeberToRemove)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("400: Responds with an error when required fields are missing", () => {
+    return request(app)
+      .delete("/api/events/1/members")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "User_id is a manditory field and must be filled with valid data"
+        );
+      });
+  });
+});

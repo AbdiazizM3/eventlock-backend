@@ -265,5 +265,10 @@
         "exampleRequest": {
             "user_id": 5
         }
+    },
+    "DELETE /api/events/:event_id/members": {
+        "description": "Serves no  content and deletes an event member from event members",
+        "queries": [],
+        "exampleResponse": {}
     }
 }

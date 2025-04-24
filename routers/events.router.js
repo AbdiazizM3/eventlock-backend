@@ -8,6 +8,7 @@ const {
   deleteEvent,
   getEventMembers,
   postEventMember,
+  deleteEventMember,
 } = require("../controllers/events.controller");
 
 const eventsRouter = express.Router();
@@ -22,5 +23,6 @@ eventsRouter.delete("/:event_id", deleteEvent);
 
 eventsRouter.get("/:event_id/members", getEventMembers);
 eventsRouter.post("/:event_id/members", postEventMember);
+eventsRouter.delete("/:event_id/members", deleteEventMember);
 
 module.exports = eventsRouter;
