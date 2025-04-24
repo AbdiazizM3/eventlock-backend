@@ -248,5 +248,10 @@
             "task_description":
         "Meet at the bottom of the hill and grab a drink or snack while settling in. (Delayed to start at 17:30)"
         }
+    },
+    "DELETE /api/events/:event_id/tasks/:task_id": {
+        "description": "Serves no content and deletes a task from tasks",
+        "queries": [],
+        "exampleResponse": {}
     }
 }

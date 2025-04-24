@@ -4,6 +4,7 @@ const {
   checkIfEventExists,
   createTask,
   updateTask,
+  removeTask,
 } = require("../models/tasks.model");
 
 function getAllTasks(req, res, next) {
@@ -91,4 +92,17 @@ function patchTask(req, res, next) {
     .catch(next);
 }
 
-module.exports = { getAllTasks, getTask, postTask, patchTask };
+function deleteTask(req, res, next) {
+  const { task_id, event_id } = req.params;
+  checkIfEventExists(event_id)
+    .then(() => {
+      removeTask(task_id)
+        .then(() => {
+          res.status(204).send({});
+        })
+        .catch(next);
+    })
+    .catch(next);
+}
+
+module.exports = { getAllTasks, getTask, postTask, patchTask, deleteTask };

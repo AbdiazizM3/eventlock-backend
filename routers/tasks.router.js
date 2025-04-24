@@ -4,6 +4,7 @@ const {
   getTask,
   postTask,
   patchTask,
+  deleteTask,
 } = require("../controllers/tasks.controller");
 
 const tasksRouter = express.Router({ mergeParams: true });
@@ -13,5 +14,6 @@ tasksRouter.post("/", postTask);
 
 tasksRouter.get("/:task_id", getTask);
 tasksRouter.patch("/:task_id", patchTask);
+tasksRouter.delete("/:task_id", deleteTask);
 
 module.exports = tasksRouter;

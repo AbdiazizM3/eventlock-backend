@@ -137,10 +137,27 @@ function updateTask(
     });
 }
 
+function removeTask(task_id) {
+  return db
+    .query(
+      `
+    DELETE FROM tasks WHERE task_id = $1
+    RETURNING *;
+    `,
+      [task_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Task not found" });
+      }
+    });
+}
+
 module.exports = {
   fetchAllTasks,
   fetchTask,
   checkIfEventExists,
   createTask,
   updateTask,
+  removeTask,
 };

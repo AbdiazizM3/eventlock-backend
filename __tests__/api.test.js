@@ -740,3 +740,41 @@ describe("PATCH /api/events/:event_id/tasks/:task_id", () => {
       });
   });
 });
+
+describe("DELETE /api/events/:event_id/tasks/:task_id", () => {
+  test("204: removes a task object based on its id and responds with no content", () => {
+    return request(app).delete("/api/events/1/tasks/1").expect(204);
+  });
+  test("404: Responds with an error when searching with a valid event_id that does not exist", () => {
+    return request(app)
+      .delete("/api/events/999999/tasks/1")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when searching with an invalid event_id", () => {
+    return request(app)
+      .delete("/api/events/not_valid/tasks/1")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Responds with an error when searching with a valid task_id that does not exist", () => {
+    return request(app)
+      .delete("/api/events/1/tasks/9999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Task not found");
+      });
+  });
+  test("400: Responds with an error when searching with an invalid task_id", () => {
+    return request(app)
+      .delete("/api/events/1/tasks/not_valid")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
