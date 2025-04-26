@@ -915,3 +915,67 @@ describe("DELETE /api/events/:event_id/members", () => {
       });
   });
 });
+
+describe("PATCH /api/users/:user_id (user_is_staff)", () => {
+  test("200: Responds with a user object with the user_is_staff property updated to true", () => {
+    const changes = {
+      user_is_staff: true,
+    };
+
+    return request(app)
+      .patch("/api/users/1")
+      .send(changes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.updatedUser.user_id).toBe(1);
+        expect(body.updatedUser.user_name).toBe("Jessica Tran");
+        expect(body.updatedUser.user_email).toBe("jessica.tran@example.com");
+        expect(body.updatedUser.user_avatar_img_url).toBe(
+          "https://cdn-icons-png.freepik.com/512/6596/6596121.png"
+        );
+        expect(body.updatedUser.user_is_staff).toBe(true);
+        expect(body.updatedUser.user_created_at).toBe(
+          "2024-05-01T08:30:00.000Z"
+        );
+      });
+  });
+  test("400: Responds with an error when user_is_staff value is invalid", () => {
+    const changes = {
+      user_is_staff: "true",
+    };
+
+    return request(app)
+      .patch("/api/users/1")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Responds with an error when user_id is valid but does not exist", () => {
+    const changes = {
+      user_is_staff: true,
+    };
+
+    return request(app)
+      .patch("/api/users/9999999")
+      .send(changes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+  test("400: Responds with an error when user_id is not valid", () => {
+    const changes = {
+      user_is_staff: true,
+    };
+
+    return request(app)
+      .patch("/api/users/not_valid")
+      .send(changes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});

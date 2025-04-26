@@ -55,10 +55,16 @@ function createUser(user_name, user_email) {
   });
 }
 
-function updateUserById(user_id, user_name, user_avatar_img_url) {
+function updateUserById(
+  user_id,
+  user_name,
+  user_avatar_img_url,
+  user_is_staff
+) {
   if (
     (user_name && typeof user_name !== "string") ||
-    (user_avatar_img_url && typeof user_avatar_img_url !== "string")
+    (user_avatar_img_url && typeof user_avatar_img_url !== "string") ||
+    (user_is_staff && typeof user_is_staff !== "boolean")
   ) {
     return Promise.reject({ status: 400, msg: "Bad request" });
   }
@@ -69,11 +75,12 @@ function updateUserById(user_id, user_name, user_avatar_img_url) {
     UPDATE users
     SET
     user_name = COALESCE($1, user_name),
-    user_avatar_img_url = COALESCE($2, user_avatar_img_url)
-    WHERE user_id = $3
+    user_avatar_img_url = COALESCE($2, user_avatar_img_url),
+    user_is_staff = COALESCE($3, user_is_staff)
+    WHERE user_id = $4
     RETURNING *;
     `,
-      [user_name, user_avatar_img_url, user_id]
+      [user_name, user_avatar_img_url, user_is_staff, user_id]
     )
     .then((result) => {
       if (result.rows.length === 0) {

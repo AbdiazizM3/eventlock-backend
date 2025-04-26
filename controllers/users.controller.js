@@ -35,9 +35,9 @@ function postUser(req, res, next) {
 
 function patchUserById(req, res, next) {
   const { user_id } = req.params;
-  const { user_name, user_avatar_img_url } = req.body;
+  const { user_name, user_avatar_img_url, user_is_staff } = req.body;
 
-  updateUserById(user_id, user_name, user_avatar_img_url)
+  updateUserById(user_id, user_name, user_avatar_img_url, user_is_staff)
     .then((updatedUser) => {
       res.status(200).send({ updatedUser });
     })
