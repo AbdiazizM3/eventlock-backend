@@ -6,4 +6,4 @@ const runSeed = () => {
   return seed(data).then(() => db.end());
 };
 
-runSeed;
+runSeed();
