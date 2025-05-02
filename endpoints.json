@@ -113,7 +113,7 @@
             }
         }
     },
-    "POST /api/users/:user_id": {
+    "POST /api/users": {
         "description": "Serves a new user object",
         "queries": [],
         "exampleResponse": {
