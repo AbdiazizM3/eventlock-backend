@@ -979,3 +979,22 @@ describe("PATCH /api/users/:user_id (user_is_staff)", () => {
       });
   });
 });
+
+describe("GET /api/users/email/:email", () => {
+  test("200: Responds with a user_id based on the email input", () => {
+    return request(app)
+      .get("/api/users/email/jessica.tran@example.com")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.userId.user_id).toBe(1);
+      });
+  });
+  test("404: Responds with an error when the email does not exist", () => {
+    return request(app)
+      .get("/api/users/email/nonexistent@example.com")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+});

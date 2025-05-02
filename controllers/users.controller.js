@@ -5,6 +5,7 @@ const {
   updateUserById,
   removeUser,
   fetchEventsByUserId,
+  fetchUserIdByEmail,
 } = require("../models/users.model");
 
 function getAllUsers(req, res, next) {
@@ -62,6 +63,15 @@ function getEventsByUserId(req, res, next) {
     .catch(next);
 }
 
+function getUserIdByEmail(request, response, next) {
+  const { email } = request.params;
+  fetchUserIdByEmail(email)
+    .then((userId) => {
+      response.status(200).send({ userId });
+    })
+    .catch(next);
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -69,4 +79,5 @@ module.exports = {
   patchUserById,
   deleteUser,
   getEventsByUserId,
+  getUserIdByEmail,
 };

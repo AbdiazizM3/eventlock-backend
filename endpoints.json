@@ -270,5 +270,12 @@
         "description": "Serves no  content and deletes an event member from event members",
         "queries": [],
         "exampleResponse": {}
+    },
+    "GET /api/users/email/:email": {
+        "description": "Serves an object that contains the user_id based on the email",
+        "queries": [],
+        "exampleResponse": {
+            "userId": {"user_id": 1}
+        }
     }
 }

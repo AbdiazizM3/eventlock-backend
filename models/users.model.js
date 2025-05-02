@@ -135,6 +135,22 @@ function fetchEventsByUserId(user_id) {
     });
 }
 
+function fetchUserIdByEmail(email) {
+  return db
+    .query(
+      `
+      SELECT user_id FROM users WHERE user_email = $1
+      `,
+      [email]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return result.rows[0];
+    });
+}
+
 module.exports = {
   fetchAllUsers,
   fetchUserById,
@@ -142,4 +158,5 @@ module.exports = {
   updateUserById,
   removeUser,
   fetchEventsByUserId,
+  fetchUserIdByEmail,
 };
