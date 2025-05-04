@@ -998,3 +998,48 @@ describe("GET /api/users/email/:email", () => {
       });
   });
 });
+
+describe("GET /api/events/:event_id/members/:user_id", () => {
+  test("200: Responds with a single event member object based on the event_id and user_id", () => {
+    return request(app)
+      .get("/api/events/1/members/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.eventMember.event_member_id).toBe(1);
+        expect(body.eventMember.user_id).toBe(1);
+        expect(body.eventMember.event_id).toBe(1);
+      });
+  });
+  test("404: Responds with an error when event_id is valid but does not exist", () => {
+    return request(app)
+      .get("/api/events/99999/members/1")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Event not found");
+      });
+  });
+  test("400: Responds with an error when event_id is not valid", () => {
+    return request(app)
+      .get("/api/events/not_valid/members/1")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Responds with an error when event_id is valid and exists but user_id is not found", () => {
+    return request(app)
+      .get("/api/events/1/members/999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+  test("400: Responds with an error when event_id is valid and exists but user_id is not valid", () => {
+    return request(app)
+      .get("/api/events/1/members/not_valid")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});

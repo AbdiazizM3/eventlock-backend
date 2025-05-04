@@ -254,6 +254,20 @@ function removeEventMember(event_id, user_id) {
   );
 }
 
+function fetchEventMemberById(event_id, user_id) {
+  return db
+    .query(
+      `SELECT * FROM event_members WHERE event_id = $1 AND user_id = $2;`,
+      [event_id, user_id]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "User not found" });
+      }
+      return result.rows[0];
+    });
+}
+
 module.exports = {
   fetchAllEvents,
   fetchEvent,
@@ -264,4 +278,5 @@ module.exports = {
   addEventMember,
   checkIfEventExists,
   removeEventMember,
+  fetchEventMemberById,
 };
