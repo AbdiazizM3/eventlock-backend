@@ -5,6 +5,21 @@ const data = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
 const endpoints = require("../endpoints.json");
 
+jest.mock("resend", () => {
+  return {
+    Resend: jest.fn().mockImplementation(() => ({
+      emails: {
+        send: jest.fn().mockResolvedValue({
+          data: {
+            id: "test-id",
+            object: "email",
+          },
+        }),
+      },
+    })),
+  };
+});
+
 beforeEach(() => {
   return seed(data);
 });
@@ -1040,6 +1055,131 @@ describe("GET /api/events/:event_id/members/:user_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("POST /api/send-email", () => {
+  test("200: Responds with success when all required fields are provided", () => {
+    const emailData = {
+      to: "test@example.com",
+      subject: "Test Subject",
+      text: "Test email content",
+      html: "<p>Test email content</p>",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("success", true);
+        expect(body).toHaveProperty("data");
+      });
+  });
+
+  test("400: Responds with an error when to field is missing", () => {
+    const emailData = {
+      subject: "Test Subject",
+      text: "Test email content",
+      html: "<p>Test email content</p>",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg");
+        expect(body.msg).toBe(
+          "to, subject, text and html are all manditory fields that must be filled with valid data"
+        );
+      });
+  });
+
+  test("400: Responds with an error when subject field is missing", () => {
+    const emailData = {
+      to: "test@example.com",
+      text: "Test email content",
+      html: "<p>Test email content</p>",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg");
+        expect(body.msg).toBe(
+          "to, subject, text and html are all manditory fields that must be filled with valid data"
+        );
+      });
+  });
+
+  test("400: Responds with an error when both text and html fields are missing", () => {
+    const emailData = {
+      to: "test@example.com",
+      subject: "Test Subject",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg");
+        expect(body.msg).toBe(
+          "to, subject, text and html are all manditory fields that must be filled with valid data"
+        );
+      });
+  });
+
+  test("200: Responds with success when only text content is provided", () => {
+    const emailData = {
+      to: "test@example.com",
+      subject: "Test Subject",
+      text: "Test email content",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("success", true);
+        expect(body).toHaveProperty("data");
+      });
+  });
+
+  test("200: Responds with success when only html content is provided", () => {
+    const emailData = {
+      to: "test@example.com",
+      subject: "Test Subject",
+      html: "<p>Test email content</p>",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("success", true);
+        expect(body).toHaveProperty("data");
+      });
+  });
+
+  test("400: Responds with an error when email format is invalid", () => {
+    const emailData = {
+      to: "invalid-email",
+      subject: "Test Subject",
+      text: "Test email content",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("msg");
       });
   });
 });

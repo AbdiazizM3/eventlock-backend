@@ -308,5 +308,23 @@
                 "user_id": 1
             }
         }
+    },
+    "POST /api/send-email": {
+        "description": "Serves a new email object",
+        "queries": [],
+        "exampleResponse": {
+            "success": true,
+            "data": {
+                "data": {
+                    "id": "test-id",
+                    "object": "email"
+                }
+            }
+        },
+        "exampleRequest": {
+            "to": "test@example.com",
+            "subject": "Test Email",
+            "text": "This is a test email"
+        }
     }
 }
