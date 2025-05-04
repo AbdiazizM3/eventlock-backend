@@ -297,5 +297,16 @@
         "exampleResponse": {
             "userId": {"user_id": 1}
         }
+    },
+    "GET /api/events/:event_id/members/:user_id": {
+        "description": "Serves an event member object based on the event id and user id",
+        "queries": [],
+        "exampleResponse": {
+            "eventMember": {
+                "event_member_id": 1,
+                "event_id": 1,
+                "user_id": 1
+            }
+        }
     }
 }
