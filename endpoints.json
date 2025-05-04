@@ -254,13 +254,33 @@
         "queries": [],
         "exampleResponse": {}
     },
-    "POST /api/events/:event_id/tasks/:task_id": {
-        "description": "Serves a new event member object",
+    "GET /api/events/:event_id/members": {
+        "description": "Serves an array containing all event member objects based on the event_id",
         "queries": [],
         "exampleResponse": {
-            "event_member_id": 17,
-            "event_id": 1,
-            "user_id": 5
+            "eventMembers": [
+                {
+                    "event_member_id": 1,
+                    "event_id": 1,
+                    "user_id": 1
+                },
+                {
+                    "event_member_id": 1,
+                    "event_id": 1,
+                    "user_id": 2
+                }
+            ]
+        }
+    },
+    "POST /api/events/:event_id/members": {
+        "description": "Serves a new event member object based on the event id",
+        "queries": [],
+        "exampleResponse": {
+            "newEventMember": {
+                "event_member_id": 17,
+                "event_id": 1,
+                "user_id": 5
+            }
         },
         "exampleRequest": {
             "user_id": 5
