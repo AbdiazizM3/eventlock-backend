@@ -1,36 +1,42 @@
-function createEmail(to, subject, text, html) {
-  if (!to || !subject || (!text && !html)) {
+const nodemailer = require("nodemailer");
+
+function createEmail(to, subject, text) {
+  if (!to || !subject || !text) {
     return Promise.reject({
       status: 400,
-      msg: "to, subject, text and html are all manditory fields that must be filled with valid data",
+      msg: "Missing required fields",
     });
   }
 
-  const emailRegex = /^\S+@\S+\.\S+$/;
-  if (!emailRegex.test(to)) {
+  if (!to || !/\S+@\S+\.\S+/.test(to)) {
     return Promise.reject({
       status: 400,
-      msg: "Invalid email format. Must be like email@example.com",
+      msg: "Invalid email format",
     });
   }
 
-  return global.resend.emails
-    .send({
-      from: "your-verified-domain@resend.dev",
-      to,
-      subject,
-      text,
-      html,
-    })
-    .then((result) => {
-      if (result.error) {
-        return Promise.reject({
-          status: 400,
-          msg: "Invalid email format",
-        });
-      }
-      return result;
-    });
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: subject,
+    text: text,
+  };
+  return transporter.sendMail(mailOptions).then((result) => {
+    if (result.error) {
+      return Promise.reject({
+        status: 400,
+        msg: "Invalid email format",
+      });
+    }
+    return result;
+  });
 }
 
 module.exports = {

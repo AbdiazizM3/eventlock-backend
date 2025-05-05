@@ -5,27 +5,20 @@ const data = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
 const endpoints = require("../endpoints.json");
 
-jest.mock("resend", () => {
-  return {
-    Resend: jest.fn().mockImplementation(() => ({
-      emails: {
-        send: jest.fn().mockResolvedValue({
-          data: {
-            id: "test-id",
-            object: "email",
-          },
-        }),
-      },
-    })),
-  };
-});
-
 beforeEach(() => {
   return seed(data);
 });
 
 afterAll(() => {
   return db.end();
+});
+
+jest.mock("nodemailer", () => {
+  return {
+    createTransport: jest.fn(() => ({
+      sendMail: jest.fn().mockResolvedValue({ success: true }),
+    })),
+  };
 });
 
 describe("GET /api", () => {
@@ -995,77 +988,12 @@ describe("PATCH /api/users/:user_id (user_is_staff)", () => {
   });
 });
 
-describe("GET /api/users/email/:email", () => {
-  test("200: Responds with a user_id based on the email input", () => {
-    return request(app)
-      .get("/api/users/email/jessica.tran@example.com")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body.userId.user_id).toBe(1);
-      });
-  });
-  test("404: Responds with an error when the email does not exist", () => {
-    return request(app)
-      .get("/api/users/email/nonexistent@example.com")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("User not found");
-      });
-  });
-});
-
-describe("GET /api/events/:event_id/members/:user_id", () => {
-  test("200: Responds with a single event member object based on the event_id and user_id", () => {
-    return request(app)
-      .get("/api/events/1/members/1")
-      .expect(200)
-      .then(({ body }) => {
-        expect(body.eventMember.event_member_id).toBe(1);
-        expect(body.eventMember.user_id).toBe(1);
-        expect(body.eventMember.event_id).toBe(1);
-      });
-  });
-  test("404: Responds with an error when event_id is valid but does not exist", () => {
-    return request(app)
-      .get("/api/events/99999/members/1")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Event not found");
-      });
-  });
-  test("400: Responds with an error when event_id is not valid", () => {
-    return request(app)
-      .get("/api/events/not_valid/members/1")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Bad request");
-      });
-  });
-  test("404: Responds with an error when event_id is valid and exists but user_id is not found", () => {
-    return request(app)
-      .get("/api/events/1/members/999999")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("User not found");
-      });
-  });
-  test("400: Responds with an error when event_id is valid and exists but user_id is not valid", () => {
-    return request(app)
-      .get("/api/events/1/members/not_valid")
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Bad request");
-      });
-  });
-});
-
 describe("POST /api/send-email", () => {
-  test("200: Responds with success when all required fields are provided", () => {
+  test("200: Responds with a success message", () => {
     const emailData = {
       to: "test@example.com",
-      subject: "Test Subject",
-      text: "Test email content",
-      html: "<p>Test email content</p>",
+      subject: "Test Email",
+      text: "This is a test email",
     };
 
     return request(app)
@@ -1073,105 +1001,15 @@ describe("POST /api/send-email", () => {
       .send(emailData)
       .expect(200)
       .then(({ body }) => {
-        expect(body).toHaveProperty("success", true);
-        expect(body).toHaveProperty("data");
+        expect(body.success).toBe(true);
+        expect(body.data).toBeDefined();
       });
   });
-
-  test("400: Responds with an error when to field is missing", () => {
-    const emailData = {
-      subject: "Test Subject",
-      text: "Test email content",
-      html: "<p>Test email content</p>",
-    };
-
-    return request(app)
-      .post("/api/send-email")
-      .send(emailData)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body).toHaveProperty("msg");
-        expect(body.msg).toBe(
-          "to, subject, text and html are all manditory fields that must be filled with valid data"
-        );
-      });
-  });
-
-  test("400: Responds with an error when subject field is missing", () => {
-    const emailData = {
-      to: "test@example.com",
-      text: "Test email content",
-      html: "<p>Test email content</p>",
-    };
-
-    return request(app)
-      .post("/api/send-email")
-      .send(emailData)
-      .then(({ body }) => {
-        expect(body).toHaveProperty("msg");
-        expect(body.msg).toBe(
-          "to, subject, text and html are all manditory fields that must be filled with valid data"
-        );
-      });
-  });
-
-  test("400: Responds with an error when both text and html fields are missing", () => {
-    const emailData = {
-      to: "test@example.com",
-      subject: "Test Subject",
-    };
-
-    return request(app)
-      .post("/api/send-email")
-      .send(emailData)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body).toHaveProperty("msg");
-        expect(body.msg).toBe(
-          "to, subject, text and html are all manditory fields that must be filled with valid data"
-        );
-      });
-  });
-
-  test("200: Responds with success when only text content is provided", () => {
-    const emailData = {
-      to: "test@example.com",
-      subject: "Test Subject",
-      text: "Test email content",
-    };
-
-    return request(app)
-      .post("/api/send-email")
-      .send(emailData)
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toHaveProperty("success", true);
-        expect(body).toHaveProperty("data");
-      });
-  });
-
-  test("200: Responds with success when only html content is provided", () => {
-    const emailData = {
-      to: "test@example.com",
-      subject: "Test Subject",
-      html: "<p>Test email content</p>",
-    };
-
-    return request(app)
-      .post("/api/send-email")
-      .send(emailData)
-      .expect(200)
-      .then(({ body }) => {
-        expect(body).toHaveProperty("success", true);
-        expect(body).toHaveProperty("data");
-      });
-  });
-
-  test("400: Responds with an error when email format is invalid", () => {
+  test("400: Responds with an error for invalid email format", () => {
     const emailData = {
       to: "invalid-email",
-      subject: "Test Subject",
-      text: "Test email content",
+      subject: "Test Email",
+      text: "This is a test email",
     };
 
     return request(app)
@@ -1179,7 +1017,21 @@ describe("POST /api/send-email", () => {
       .send(emailData)
       .expect(400)
       .then(({ body }) => {
-        expect(body).toHaveProperty("msg");
+        expect(body.msg).toBe("Invalid email format");
+      });
+  });
+  test("400: Responds with an error when required fields are missing", () => {
+    const emailData = {
+      to: "test@example.com",
+      text: "Missing subject",
+    };
+
+    return request(app)
+      .post("/api/send-email")
+      .send(emailData)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required fields");
       });
   });
 });

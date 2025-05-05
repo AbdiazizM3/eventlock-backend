@@ -1,5 +1,4 @@
 const express = require("express");
-const { Resend } = require("resend");
 const app = express();
 const getEndpoints = require("./controllers/endpoints.controller");
 
@@ -8,9 +7,6 @@ const eventsRouter = require("./routers/events.router");
 const { postEmail } = require("./controllers/email.controller");
 
 app.use(express.json());
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-global.resend = resend;
 
 app.get("/api", getEndpoints);
 app.use("/api/events", eventsRouter);
