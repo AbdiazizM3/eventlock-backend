@@ -6,6 +6,7 @@ To clone this repository write git clone in the terminal with the link of the co
 
 To set up the environment variables create .env. files for .env.development and .env.test
 Inside each file write PGDATABASE and assign it to the appropriate database name
+Also within the .env. files add EMAIL_USER and EMAIL_PASS and fill them with the appropriate data as stated in the env.example file
 Run npm install
 
 Hosted version of the API: https://lokit.onrender.com/
