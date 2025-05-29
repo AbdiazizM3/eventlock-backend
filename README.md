@@ -1,20 +1,41 @@
 # Eventlock API
 
-To clone this repository write git clone in the terminal with the link of the corresponding repository:
+Eventlock is a backend API designed to simulate real-world application data handling, providing a structured and scalable foundation for backend services.
 
-- git clone https://github.com/AbdiazizM3/lokit-backend
+# Hosted Version
 
-To set up the environment variables create .env. files for .env.development and .env.test
-Inside each file write PGDATABASE and assign it to the appropriate database name
-Also within the .env. files add EMAIL_USER and EMAIL_PASS and fill them with the appropriate data as stated in the env.example file
-Run npm install
+API URL: https://lokit.onrender.com/
 
-Hosted version of the API: https://lokit.onrender.com/
+# Getting Started
 
-This project is an API that accesses application data programatically trying to replicate real world backend services.
+Clone the Repository
 
-The minimum version of node and postgres to run this project:
-node: v22.9.0
-postgres v17
+git clone https://github.com/AbdiazizM3/lokit-backend
+cd lokit-backend
+
+Install Dependencies
+
+npm install
+
+# Environment Setup
+
+Create the following environment configuration files:
+
+.env.development
+
+.env.test
+
+Each file should include the following environment variables:
+
+PGDATABASE
+EMAIL_USER
+EMAIL_PASS
+
+Refer to the env.example file for structure and required values.
+
+#Requirements
+Node.js: v22.9.0 or higher
+
+PostgreSQL: v17 or higher
 
 ---
