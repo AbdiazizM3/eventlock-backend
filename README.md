@@ -33,7 +33,8 @@ EMAIL_PASS
 
 Refer to the env.example file for structure and required values.
 
-#Requirements
+# Requirements
+
 Node.js: v22.9.0 or higher
 
 PostgreSQL: v17 or higher
