@@ -1,7 +1,5 @@
 # Eventlock API
 
-Eventlock is a backend API designed to simulate real-world application data handling, providing a structured and scalable foundation for backend services.
-
 ---
 
 # Hosted Version
